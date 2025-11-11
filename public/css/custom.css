@@ -1,0 +1,404 @@
+/* === GLOBAL STYLES AND ANIMATIONS === */
+/* Animasi masuk halaman */
+body {
+  opacity: 0;
+  animation: fadeInBody 0.7s ease forwards;
+}
+
+@keyframes fadeInBody {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadePage {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+@keyframes waveMove {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroTextFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === NAVBAR STYLES === */
+/* Efek kaca transparan dan shadow halus */
+.navbar {
+  background: rgba(11, 102, 195, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.4s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar.scrolled {
+  background: rgba(11, 102, 195, 0.98);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+}
+
+.navbar-brand {
+  letter-spacing: 0.5px;
+  transition: transform 0.2s ease;
+}
+
+.navbar-brand:hover {
+  transform: scale(1.03);
+}
+
+.navbar .nav-link {
+  position: relative;
+  color: #fff !important;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  padding: 6px 12px;
+  transition: color 0.3s ease;
+}
+
+.navbar .nav-link:hover {
+  color: #ffc107 !important;
+}
+
+.navbar .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #ffc107;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.navbar .nav-link:hover::after,
+.navbar .nav-link.active::after {
+  width: 60%;
+}
+
+.btn-outline-light {
+  border: 1.5px solid #fff;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-light:hover {
+  background-color: #fff !important;
+  color: #0b66c3 !important;
+  transform: translateY(-2px);
+}
+
+.btn-warning {
+  font-weight: 600;
+  color: #0b66c3 !important;
+  transition: all 0.3s ease;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800 !important;
+  color: #fff !important;
+  transform: translateY(-2px);
+}
+
+.dropdown-menu {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+.dropdown-item:hover {
+  background-color: #f2f8ff;
+}
+
+/* === HERO SECTION === */
+.hero {
+  background: url('path/to/beach-image.jpg') no-repeat center center; /* Ganti dengan URL gambar pantai */
+  background-size: cover;
+  background-color: #0b66c3; /* Biru khas tema */
+  color: white;
+  text-align: center;
+  padding: 150px 20px;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: heroFadeIn 1s ease forwards;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(11,102,195,0.8) 0%, rgba(70,179,255,0.3) 100%);
+  z-index: 0;
+}
+
+.hero .container {
+  position: relative;
+  z-index: 1;
+}
+
+.hero h1 {
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: heroTextFadeIn 1s ease 0.3s forwards;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  margin-top: 10px;
+  color: #f0f0f0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: heroTextFadeIn 1s ease 0.6s forwards;
+}
+
+/* === WAVE EFFECT === */
+.ocean {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+  line-height: 0;
+  z-index: 1;
+}
+
+.wave {
+  position: absolute;
+  bottom: 0;
+  width: 200%;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 1000% 1000% 0 0;
+  opacity: 0.8;
+  animation: waveMove 9s linear infinite;
+}
+
+.wave:nth-of-type(2) {
+  bottom: 5px;
+  background: rgba(255, 255, 255, 0.4);
+  animation: waveMove 12s linear infinite reverse;
+}
+
+.wave:nth-of-type(3) {
+  bottom: 10px;
+  background: rgba(255, 255, 255, 0.25);
+  animation: waveMove 14s linear infinite;
+}
+
+/* === FILTER AND MAP STYLES === */
+.filter-box {
+  background: linear-gradient(135deg, #a8e6ce 0%, #dcedc1 100%);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.filter-box:hover {
+  transform: scale(1.02);
+}
+
+.filter-box h5 {
+  color: #004d40;
+}
+
+.filter-box .form-check-label {
+  font-weight: 500;
+  color: #333;
+}
+
+.form-check-input:checked + .form-check-label {
+  color: #007bff;
+}
+
+#map {
+  height: 600px;
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-top: 20px;
+}
+
+.map-wrapper {
+  background-color: #ffffff;
+  margin-top: 50px;
+  border-radius: 25px 25px 0 0;
+  box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+  padding: 50px 0;
+}
+
+/* === OTHER STYLES (Cards, Ratings, etc.) === */
+.hover-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 0.75rem;
+}
+
+.hover-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.hover-card img {
+  height: 230px;
+  object-fit: cover;
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+}
+
+.rating i {
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.rating i:hover,
+.rating i.active {
+  color: #ffc107;
+  transform: scale(1.2);
+}
+
+.comment-item {
+  background: rgba(240, 240, 240, 0.8);
+  border-radius: 0.5rem;
+  padding: 0.6rem 1rem;
+  margin-top: 0.5rem;
+}
+
+.glass-bg {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-bg:hover {
+  transform: scale(1.01);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.destinasi-section {
+  position: relative;
+  color: white;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.destinasi-section .bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://cdn.pixabay.com/photo/2017/05/16/21/21/beach-2318985_1280.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: blur(20px);
+  transform: scale(1.1);
+  z-index: -2;
+}
+
+.destinasi-section .bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(11, 102, 195, 0.55);
+  z-index: -1;
+}
+
+/* === RESPONSIVE STYLES === */
+@media (max-width: 768px) {
+  .hero {
+    padding: 100px 0;
+  }
+  .hero h1 {
+    font-size: 2rem;
+  }
+  .filter-box {
+    padding: 15px;
+  }
+  #map {
+    height: 60vh;
+  }
+}
+
+@media (max-width: 992px) {
+  .hero {
+    padding: 80px 20px;
+  }
+  .hero h1 {
+    font-size: 2rem;
+  }
+  .hero p {
+    font-size: 1rem;
+  }
+  #map {
+    height: 60vh;
+  }
+}

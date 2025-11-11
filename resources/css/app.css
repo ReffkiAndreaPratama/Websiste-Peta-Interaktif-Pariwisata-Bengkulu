@@ -1,0 +1,33 @@
+/* === FIX MODAL DI ATAS SEMUA ELEMEN === */
+
+/* Pastikan semua layer latar di bawah */
+.ocean,
+.wave,
+.bg-overlay,
+.bg-gradient {
+  position: relative;
+  z-index: 0 !important;
+}
+
+/* Konten utama (hero, destinasi, CTA) di tengah */
+.hero-section,
+.destinasi-section,
+.cta-section {
+  position: relative;
+  z-index: 1 !important;
+}
+
+/* Modal dan backdrop di paling atas */
+.modal,
+.modal-backdrop {
+  position: fixed !important;
+  z-index: 99999 !important;
+}
+
+/* Tambahan: kalau wave atau gradient punya position fixed, matikan pointer-event */
+.ocean,
+.wave,
+.bg-gradient,
+.bg-overlay {
+  pointer-events: none !important;
+}
