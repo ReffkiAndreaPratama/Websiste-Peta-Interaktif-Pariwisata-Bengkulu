@@ -1,39 +1,55 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('password.store') }}">
-        @csrf
+@extends('layouts.app')
 
-        <!-- Password Reset Token -->
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
+@section('title', 'Ganti Password | Dinas Pariwisata Kota Bengkulu')
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+@section('content')
+<section class="d-flex align-items-center justify-content-center" style="min-height: 85vh; background: linear-gradient(180deg, #e8f5ff 0%, #ffffff 100%);">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="card border-0 shadow-lg rounded-4">
+          <div class="card-body p-4">
+            <h3 class="fw-bold text-center mb-4 brand-blue">Buat Password Baru</h3>
+
+            <form method="POST" action="{{ route('password.store') }}">
+              @csrf
+
+              <input type="hidden" name="token" value="{{ $request->route('token') }}">
+
+              <div class="mb-3">
+                <label for="email" class="form-label fw-semibold">Email</label>
+                <input id="email" type="email" name="email" value="{{ old('email', $request->email) }}" required autocomplete="email" class="form-control rounded-pill">
+                @error('email')
+                  <small class="text-danger">{{ $message }}</small>
+                @enderror
+              </div>
+
+              <div class="mb-3">
+                <label for="password" class="form-label fw-semibold">Password Baru</label>
+                <input id="password" type="password" name="password" required autocomplete="new-password" class="form-control rounded-pill">
+                @error('password')
+                  <small class="text-danger">{{ $message }}</small>
+                @enderror
+              </div>
+
+              <div class="mb-3">
+                <label for="password_confirmation" class="form-label fw-semibold">Konfirmasi Password</label>
+                <input id="password_confirmation" type="password" name="password_confirmation" required class="form-control rounded-pill">
+              </div>
+
+              <div class="d-grid">
+                <button class="btn btn-primary rounded-pill py-2 fw-semibold">Reset Password</button>
+              </div>
+            </form>
+
+            <div class="text-center mt-3">
+              <a href="{{ route('login') }}" class="text-decoration-none small">Kembali ke Login</a>
+            </div>
+
+          </div>
         </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                type="password"
-                                name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Reset Password') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+      </div>
+    </div>
+  </div>
+</section>
+@endsection

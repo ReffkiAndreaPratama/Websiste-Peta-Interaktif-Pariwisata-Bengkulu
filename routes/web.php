@@ -4,12 +4,18 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DestinasiController;
+use App\Http\Controllers\DestinasiReviewController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\HomeController;
+
 
 /* ===========================
  * 🏠 Publik
  * =========================== */
-Route::view('/', 'home')->name('home');
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::view('/about', 'about')->name('about');
 
 /* ===========================
@@ -51,7 +57,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     // Detail deskripsi (desc.blade.php) — dipakai bersama
     Route::get('/profile/desc/{id}', [ProfileController::class, 'desc'])
-        ->whereNumber('id') // pastikan {id} numerik
+        ->whereNumber('id')
         ->name('profile.desc');
 });
 
@@ -74,7 +80,6 @@ Route::middleware(['auth', 'role:admin'])
         /* 🧭 CRUD Destinasi */
         Route::controller(DestinasiController::class)->group(function () {
             Route::get('/destinasi', 'index')->name('destinasi');
-            // Route::get('/destinasi/create', 'create')->name('destinasi.create');
             Route::post('/destinasi', 'store')->name('destinasi.store');
             Route::get('/destinasi/{id}/edit', 'edit')->whereNumber('id')->name('destinasi.edit');
             Route::put('/destinasi/{id}', 'update')->whereNumber('id')->name('destinasi.update');
@@ -83,24 +88,13 @@ Route::middleware(['auth', 'role:admin'])
 
         /* 👤 CRUD User (nama route: admin.user.*) */
         Route::controller(UserController::class)->group(function () {
-            // Index daftar user (opsional, berbeda path dari /users agar tidak bentrok)
             Route::get('/user', 'index')->name('user.index');
-
-            // Create (opsional)
             Route::get('/user/create', 'create')->name('user.create');
-
-            // Store ✅ inilah yang biasanya dipanggil form: route('admin.user.store')
             Route::post('/user', 'store')->name('user.store');
-
-            // Edit (opsional)
             Route::get('/user/{id}/edit', 'edit')->whereNumber('id')->name('user.edit');
-
-            // Update
             Route::match(['put', 'patch'], '/user/{id}', 'update')
                 ->whereNumber('id')
                 ->name('user.update');
-
-            // Destroy
             Route::delete('/user/{id}', 'destroy')->whereNumber('id')->name('user.destroy');
         });
 
@@ -113,8 +107,8 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/preview/destinasi', [AdminController::class, 'previewDestinasi'])->name('preview.destinasi');
         Route::get('/preview/about', [AdminController::class, 'previewAbout'])->name('preview.about');
 
-        // ❌ HAPUS: Route preview desc khusus admin
-        // Route::get('/preview/desc/{id}', [UserController::class, 'desc'])->name('preview.desc');
+        /* ⭐ Fitur Baru — Preview Admin Peta (versi user tapi untuk admin) */
+        Route::get('/preview/admin-peta', [AdminController::class, 'previewAdminPeta'])->name('preview.adminPeta');
     });
 
 /* ===========================
@@ -131,12 +125,31 @@ Route::middleware(['auth', 'role:admin'])
             ->name('api.destinasi.geojson');
     });
 
-/* ===========================
- * (Opsional) Publikkan API peta
- * ===========================
- * Jika ingin peta & datanya bisa diakses tanpa login,
- * pindahkan 2 route API berikut ke luar middleware user di atas:
- *
- * Route::get('/api/destinasi/changes', [DestinasiController::class, 'changes'])->name('api.destinasi.changes');
- * Route::get('/api/destinasi/geojson',  [DestinasiController::class, 'geojson'])->name('api.destinasi.geojson');
- */
+    Route::prefix('api/destinasi')->group(function () {
+    Route::get('{destinasi}/reviews', [DestinasiReviewController::class, 'index'])
+        ->name('api.destinasi.reviews.index');
+
+    Route::post('{destinasi}/reviews', [DestinasiReviewController::class, 'store'])
+        ->name('api.destinasi.reviews.store')
+        ->middleware('throttle:20,1'); // batasi spam
+});
+
+// API untuk reviews (single source, PUBLIC — sesuaikan middleware jika ingin auth)
+Route::prefix('api/destinasi')->group(function () {
+    // GET /api/destinasi/{id}/reviews
+    Route::get('{id}/reviews', [DestinasiReviewController::class, 'index'])
+        ->name('api.destinasi.reviews.index');
+
+    // POST /api/destinasi/{id}/reviews
+    Route::post('{id}/reviews', [DestinasiReviewController::class, 'store'])
+        ->name('api.destinasi.reviews.store')
+        ->middleware('throttle:20,1'); // batasi spam
+});
+
+
+Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
+Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
+Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
+Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.store');
+
+

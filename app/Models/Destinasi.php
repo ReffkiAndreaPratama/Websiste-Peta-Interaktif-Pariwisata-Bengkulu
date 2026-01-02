@@ -11,8 +11,15 @@ class Destinasi extends Model
 
     protected $table = 'destinasi';
 
+    // hanya satu kali deklarasi $fillable
     protected $fillable = [
-        'nama', 'kategori', 'deskripsi', 'latitude', 'longitude', 'gambar',
+        'nama',
+        'kategori',
+        'deskripsi',
+        'latitude',
+        'longitude',
+        'gambar',
+        'slug',
     ];
 
     protected $casts = [
@@ -24,5 +31,11 @@ class Destinasi extends Model
     public function scopeHasCoordinates($q)
     {
         return $q->whereNotNull('latitude')->whereNotNull('longitude');
+    }
+
+    /** Relasi ke review */
+    public function reviews()
+    {
+        return $this->hasMany(DestinasiReview::class);
     }
 }

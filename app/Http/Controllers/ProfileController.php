@@ -64,32 +64,35 @@ class ProfileController extends Controller
      * Menentukan URL "kembali" yang sesuai asal (admin/user) secara otomatis.
      */
     public function desc(Request $request, int $id): View
-    {
-        $d = Destinasi::findOrFail($id);
+{
+    $d = Destinasi::with(['reviews' => function ($q) {
+        $q->latest();
+    }])->findOrFail($id);
 
-        // Deteksi asal navigasi dan role
-        $fromAdmin = Auth::check() && Auth::user()->role === 'admin';
-        $cameFromAdminArea = Str::contains(url()->previous(), '/admin');
+    $cameFromAdminArea = Str::contains(url()->previous(), '/admin');
 
-        // Tentukan URL back default
-        $back = route('destinasi'); // default ke daftar destinasi user
+    $fromAdmin = Auth::check() && Auth::user()->role === 'admin';
 
-        if ($fromAdmin || $cameFromAdminArea) {
-            // Jika punya rute preview destinasi admin, pakai itu; kalau tidak, fallback ke halaman kelola destinasi admin
-            if (RouteFacade::has('admin.preview.destinasi')) {
-                $back = route('admin.preview.destinasi');
-            } elseif (RouteFacade::has('admin.destinasi')) {
-                $back = route('admin.destinasi');
-            } else {
-                // Fallback terakhir tetap ke daftar destinasi user
-                $back = route('destinasi');
-            }
+    $back = route('destinasi');
+    if ($fromAdmin || $cameFromAdminArea) {
+        if (RouteFacade::has('admin.preview.destinasi')) {
+            $back = route('admin.preview.destinasi');
+        } elseif (RouteFacade::has('admin.destinasi')) {
+            $back = route('admin.destinasi');
         }
-
-        return view('profile.desc', [
-            'd' => $d,
-            'fromAdmin' => $fromAdmin || $cameFromAdminArea,
-            'back' => $back,
-        ]);
     }
+
+    $ratingAvg = $d->reviews()->avg('rating');
+    $ratingAvg = $ratingAvg !== null ? round((float) $ratingAvg, 2) : 0;
+    $ratingCount = $d->reviews()->count();
+
+    return view('profile.desc', [
+        'd'            => $d,
+        'fromAdmin'    => $fromAdmin || $cameFromAdminArea,
+        'back'         => $back,
+        'rating_avg'   => $ratingAvg,
+        'rating_count' => $ratingCount,
+    ]);
+}
+
 }

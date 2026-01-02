@@ -30,13 +30,34 @@
             </span>
           </div>
           <div class="card-body d-flex flex-column flex-grow-1">
-            <h5 class="fw-bold text-primary mb-3">{{ $d->nama }}</h5>
-            <p class="text-secondary small mb-4 flex-grow-1">{{ Str::limit($d->deskripsi, 120) }}</p>
-            <a href="{{ route('profile.desc', $d->id) }}" class="btn-detail mt-auto">
-            Lihat Detail <span class="arrow">→</span>
-          </a>
+              <h5 class="fw-bold text-primary mb-3">{{ $d->nama }}</h5>
 
+              {{-- ⭐ RATING DESTINASI --}}
+              @php
+                  $avg = $d->rating_avg ?? 0;
+                  $rounded = round($avg);
+              @endphp
+              <div class="rating mb-2">
+                  @for ($i = 1; $i <= 5; $i++)
+                      <i class="bi {{ $i <= $rounded ? 'bi-star-fill text-warning' : 'bi-star text-muted' }}"></i>
+                  @endfor
+                  <span class="small text-muted ms-1">
+                      @if ($avg)
+                          {{ number_format($avg, 1) }} ({{ $d->review_count }} ulasan)
+                      @else
+                          Belum ada ulasan
+                      @endif
+                  </span>
+              </div>
+              {{-- ⭐ END RATING --}}
+
+              <p class="text-secondary small mb-4 flex-grow-1">{{ Str::limit($d->deskripsi, 120) }}</p>
+
+              <a href="{{ route('profile.desc', $d->id) }}" class="btn-detail mt-auto">
+                  Lihat Detail <span class="arrow">→</span>
+              </a>
           </div>
+
         </div>
       </div>
     @empty
@@ -46,6 +67,7 @@
     @endforelse
   </div>
 </section>
+
 
 <!-- === AOS Animation === -->
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
