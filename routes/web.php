@@ -152,4 +152,49 @@ Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->
 Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
 Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.store');
 
+/* ===========================
+ * 🚀 SETUP ROUTES (untuk deploy tanpa SSH)
+ * Hapus setelah setup selesai!
+ * =========================== */
+Route::prefix('setup')->group(function () {
+    // Jalankan migration
+    Route::get('/migrate', function () {
+        if (app()->environment('production') && request('key') !== 'petainteraktif2025') {
+            abort(403);
+        }
+        \Artisan::call('migrate', ['--force' => true]);
+        return '<pre>' . \Artisan::output() . '</pre><p>✅ Migration selesai!</p>';
+    });
+
+    // Jalankan seeder
+    Route::get('/seed', function () {
+        if (app()->environment('production') && request('key') !== 'petainteraktif2025') {
+            abort(403);
+        }
+        \Artisan::call('db:seed', ['--force' => true]);
+        return '<pre>' . \Artisan::output() . '</pre><p>✅ Seeder selesai!</p>';
+    });
+
+    // Buat storage symlink
+    Route::get('/storage-link', function () {
+        if (app()->environment('production') && request('key') !== 'petainteraktif2025') {
+            abort(403);
+        }
+        \Artisan::call('storage:link');
+        return '<pre>' . \Artisan::output() . '</pre><p>✅ Storage link dibuat!</p>';
+    });
+
+    // Clear cache
+    Route::get('/clear-cache', function () {
+        if (app()->environment('production') && request('key') !== 'petainteraktif2025') {
+            abort(403);
+        }
+        \Artisan::call('config:clear');
+        \Artisan::call('cache:clear');
+        \Artisan::call('view:clear');
+        \Artisan::call('route:clear');
+        return '<p>✅ Semua cache dibersihkan!</p>';
+    });
+});
+
 
